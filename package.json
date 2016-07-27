@@ -1,0 +1,33 @@
+{
+  "name": "grommet-cli",
+  "version": "0.1.0",
+  "main": "src/grommet.js",
+  "description": "Command line interface for Grommet.",
+  "authors": [
+    "Alan Souza",
+    "Bryan Jacquot",
+    "Chris Carlozzi",
+    "Eric Soderberg"
+  ],
+  "homepage": "http://grommet.io",
+  "bugs": "https://github.com/grommet/grommet-cli/issues",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grommet/grommet-cli.git"
+  },
+  "bin": {
+    "grommet": "./bin/grommet.js"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "vorpal": "^1.11.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/babel src --out-dir bin --copy-files --loose-mode"
+  }
+}
