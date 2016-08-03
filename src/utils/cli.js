@@ -121,7 +121,7 @@ export function runNpmInstall (cwd, config) {
     console.log(
       `[${config.delimiter}] If the install fails, make sure to delete your node_modules and run 'npm install' again...`
     );
-    const command = /win/.test(os.platform()) ? 'npm.cmd' : 'npm';
+    const command = /^win/.test(os.platform()) ? 'npm.cmd' : 'npm';
     spawn(
       command, ['install'], { stdio: 'inherit', cwd: cwd }
     ).on('close', resolve);
