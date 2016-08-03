@@ -18,7 +18,7 @@ import {
 
 export default function (vorpal) {
   const config = {
-    appTypes: ['empty', 'full'],
+    appTypes: ['empty', 'full', 'static'],
     appThemes: Object.keys(themes),
     cliPath: path.join(__dirname, '../../'),
     delimiter: vorpal.chalk.magenta('grommet'),

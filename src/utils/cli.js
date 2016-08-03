@@ -74,22 +74,35 @@ export function generateProject(from, to, options, config) {
       const destinationFolder = path.join(to, root.split(from)[1]);
       const destinationFile = path.join(destinationFolder, stat.name);
 
-      ejs.renderFile(source, templateVars, {}, (err, content) => {
-        if (err) {
-          throw err;
-        }
+      const isImageOrEjs = /\.(jpg|jpeg|png|gif|ejs)$/.test(stat.name);
+      if (isImageOrEjs) {
         mkdirp(destinationFolder, (err) => {
           if (err) {
             throw err;
           }
-          fs.writeFile(destinationFile, content, (err) => {
-            if(err) {
-              throw err;
-            }
-          });
+          fs.createReadStream(source).pipe(
+            fs.createWriteStream(destinationFile)
+          );
           next();
         });
-      });
+      } else {
+        ejs.renderFile(source, templateVars, {}, (err, content) => {
+          if (err) {
+            throw err;
+          }
+          mkdirp(destinationFolder, (err) => {
+            if (err) {
+              throw err;
+            }
+            fs.writeFile(destinationFile, content, (err) => {
+              if(err) {
+                throw err;
+              }
+            });
+            next();
+          });
+        });
+      }
     });
 
     walker.on('end', resolve);
