@@ -24,5 +24,5 @@ if (process.argv.length === 2) {
 } else {
   // this means that more than "grommet" has been typed
   // we should execute the command instead
-  cli.parse(process.argv);
+  cli.delimiter('').parse(process.argv);
 }

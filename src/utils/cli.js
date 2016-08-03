@@ -4,6 +4,7 @@
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 /**
 * NPM dependencies
@@ -120,8 +121,9 @@ export function runNpmInstall (cwd, config) {
     console.log(
       `[${config.delimiter}] If the install fails, make sure to delete your node_modules and run 'npm install' again...`
     );
+    const command = /win/.test(os.platform()) ? 'npm.cmd' : 'npm';
     spawn(
-      'npm', ['install'], { stdio: 'inherit', cwd: cwd }
+      command, ['install'], { stdio: 'inherit', cwd: cwd }
     ).on('close', resolve);
   });
 }
