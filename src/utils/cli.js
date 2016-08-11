@@ -35,12 +35,13 @@ export function capitalize(str) {
   return words.join(' ');
 }
 
-export function dependenciesSupported(nodeVersion, npmVersion) {
-  if (!nodeVersionSupported(nodeVersion) || !npmVersionSupported(npmVersion)) {
+export function dependenciesSupported(config) {
+  if (!nodeVersionSupported(config.nodeVersion) ||
+    !npmVersionSupported(config.npmVersion)) {
     console.error(
-      `[${grommetDelimiter}] Grommet requires Node v${supportedNodeVersion}+ and NPM v${supportedNpmVersion}+.`);
+      `[${config.delimiter}] Grommet requires Node v${supportedNodeVersion}+ and NPM v${supportedNpmVersion}+.`);
     console.error(
-      `[${grommetDelimiter}] Currently you have Node ${process.version} and NPM ${npmVersion}`
+      `[${config.delimiter}] Currently you have Node ${process.version} and NPM ${config.npmVersion}`
     );
     return false;
   }

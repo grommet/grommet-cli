@@ -71,7 +71,7 @@ export default function (vorpal) {
       return true;
     })
     .action((args, cb) => {
-      if (!dependenciesSupported(config.nodeVersion, config.npmVersion)) {
+      if (!dependenciesSupported(config)) {
         throw 'Unsupported version.';
       }
       const options = Object.assign({
