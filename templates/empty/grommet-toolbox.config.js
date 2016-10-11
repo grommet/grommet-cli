@@ -12,6 +12,5 @@ export default {
   mainJs: 'src/js/index.js',
   mainScss: 'src/scss/index.scss',
   devServerPort: 9000,
-  eslintOverride: path.resolve(__dirname, 'customEslintrc'),
-  scsslint: true
+  eslintOverride: path.resolve(__dirname, 'customEslintrc')
 };

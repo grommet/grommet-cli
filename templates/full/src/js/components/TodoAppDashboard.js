@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import Header from 'grommet/components/Header';
-import Tiles from 'grommet/components/Tiles';
-import Tile from 'grommet/components/Tile';
+import Box from 'grommet/components/Box';
+import Heading from 'grommet/components/Heading';
+import List from 'grommet/components/List';
+import ListItem from 'grommet/components/ListItem';
 import Meter from 'grommet/components/Meter';
-import Table from 'grommet/components/Table';
 import Section from 'grommet/components/Section';
+import Value from 'grommet/components/Value';
 import Status from 'grommet/components/icons/Status';
 
 function getLabel(label, count, colorIndex) {
@@ -49,37 +50,59 @@ export default class TodoAppDashboard extends Component {
       warning: 0
     };
 
-    let items = this.state.tasks.map((task, index) => {
+    let tasks = this.state.tasks.map((task, index) => {
 
       tasksMap[task.status] += 1;
 
+      let separator;
+      if (index === 0) {
+        separator = 'horizontal';
+      }
       return (
-        <tr key={index}>
-          <td><Status value={task.status} small={true} /></td>
-          <td>{task.item}</td>
-        </tr>
+        <ListItem key={`task_${index}`} separator={separator}
+          responsive={false}>
+          <Box>
+            <Status value={task.status} size='small' />
+            <span>{task.item}</span>
+          </Box>
+        </ListItem>
       );
-    });
+    }, this);
+
+    const series = [
+      getLabel('Past Due', tasksMap.critical, 'critical'),
+      getLabel('Due Soon', tasksMap.warning, 'warning'),
+      getLabel('Done', tasksMap.ok, 'ok')
+    ];
+
+    let value, label;
+    if (this.state.index >= 0) {
+      value = series[this.state.index].value;
+      label = series[this.state.index].label;
+    } else {
+      value = 0;
+      series.forEach(serie => value += serie.value);
+      label = 'Total';
+    }
 
     return (
-      <Section primary={true}>
-        <Tiles fill={true} flush={false}>
-          <Tile align="center">
-            <Meter series={[
-              getLabel('Past Due', tasksMap.critical, "critical"),
-              getLabel('Due Soon', tasksMap.warning, "warning"),
-              getLabel('Done', tasksMap.ok, "ok")
-            ]} type="circle" units="Tasks" />
-          </Tile>
-          <Tile>
-            <Header><h3>My Tasks:</h3></Header>
-            <Table>
-              <tbody>
-                {items}
-              </tbody>
-            </Table>
-          </Tile>
-        </Tiles>
+      <Section primary={true} flex={true}>
+        <Box direction='row'>
+          <Box basis='1/3' align="center">
+            <Meter series={series} type="circle" label={false}
+              onActive={(index) => this.setState({ index: index })} />
+            <Box direction="row" justify="between" align="center"
+              responsive={false}>
+              <Value value={value} units="Tasks" align="center" label={label} />
+            </Box>
+          </Box>
+          <Box basis='2/3' pad='medium'>
+            <Heading tag='h3'>My Tasks</Heading>
+            <List>
+              {tasks}
+            </List>
+          </Box>
+        </Box>
       </Section>
     );
   }

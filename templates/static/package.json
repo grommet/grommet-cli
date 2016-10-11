@@ -18,7 +18,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.5.2",
     "ejs-compiled-loader": "^2.1.1",
-    "grommet-toolbox": "^0.2.0",
+    "grommet-toolbox": "^0.4.5",
     "gulp": "^3.9.0",
     "react-router-to-array": "^0.1.1",
     "static-site-generator-webpack-plugin": "^2.1.0"
