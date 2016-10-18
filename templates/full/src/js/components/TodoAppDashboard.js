@@ -86,24 +86,22 @@ export default class TodoAppDashboard extends Component {
     }
 
     return (
-      <Section primary={true} flex={true}>
-        <Box direction='row'>
-          <Box basis='1/3' align="center">
-            <Meter series={series} type="circle" label={false}
-              onActive={(index) => this.setState({ index: index })} />
-            <Box direction="row" justify="between" align="center"
-              responsive={false}>
-              <Value value={value} units="Tasks" align="center" label={label} />
-            </Box>
-          </Box>
-          <Box basis='2/3' pad='medium'>
-            <Heading tag='h3'>My Tasks</Heading>
-            <List>
-              {tasks}
-            </List>
+      <Box primary={true} flex={true} direction='row'>
+        <Box basis='1/3' align="center">
+          <Meter series={series} type="circle" label={false}
+            onActive={(index) => this.setState({ index: index })} />
+          <Box direction="row" justify="between" align="center"
+            responsive={false}>
+            <Value value={value} units="Tasks" align="center" label={label} />
           </Box>
         </Box>
-      </Section>
+        <Box basis='2/3' pad='medium'>
+          <Heading tag='h3'>My Tasks</Heading>
+          <List>
+            {tasks}
+          </List>
+        </Box>
+      </Box>
     );
   }
 };
