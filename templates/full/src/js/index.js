@@ -13,8 +13,7 @@ class Main extends Component {
   render () {
     return (
       <App centered={false}>
-        <Header direction="row" justify="between" large={true}
-          pad={{horizontal: 'medium'}}>
+        <Header direction="row" justify="between" pad={{horizontal: 'medium'}}>
           <Title><%= appTitle %></Title>
         </Header>
         <TodoAppDashboard />
