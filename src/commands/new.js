@@ -60,6 +60,10 @@ export default function (vorpal) {
       '-l, --license [license]',
       `Project license. Defaults to empty.`
     )
+    .option(
+      '-i, --noInstall',
+      `Skip npm install after generation is completed. Defaults to false.`
+    )
     .validate((args) => {
       if (args.options.type && !config.appTypes.includes(args.options.type)) {
         return `Invalid type. Available types are: ${config.appTypes.join()}`;
@@ -105,7 +109,19 @@ export default function (vorpal) {
           try {
             generateProject(
               templateFolder, newAppPath, options, config
-            ).then(runNpmInstall.bind(this, newAppPath, config)).then(cb);
+            ).then(() => {
+              console.log(
+                `[${config.delimiter}] App generation successfully completed`
+              );
+              if (options.noInstall) {
+                console.log(
+                  `[${config.delimiter}] NPM install has been skipped`
+                );
+                return Promise.resolve();
+              } else {
+                return runNpmInstall(newAppPath, config);
+              }
+            }).then(cb);
           } catch(err) {
             shelljs.rm('-rf', newAppPath);
             throw err;

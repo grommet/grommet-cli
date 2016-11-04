@@ -114,9 +114,6 @@ export function generateProject(from, to, options, config) {
 export function runNpmInstall (cwd, config) {
   return new Promise((resolve) => {
     console.log(
-      `[${config.delimiter}] App generation successfully completed`
-    );
-    console.log(
       `[${config.delimiter}] Installing Grommet dependencies...`
     );
     console.log(
