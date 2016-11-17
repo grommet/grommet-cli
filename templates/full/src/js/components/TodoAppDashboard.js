@@ -4,7 +4,6 @@ import Heading from 'grommet/components/Heading';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
 import Meter from 'grommet/components/Meter';
-import Section from 'grommet/components/Section';
 import Value from 'grommet/components/Value';
 import Status from 'grommet/components/icons/Status';
 
