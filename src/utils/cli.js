@@ -134,7 +134,31 @@ export function npmVersionSupported(npmVersion) {
   return npmVersion >= Number(supportedNpmVersion);
 }
 
+export function loadConfig() {
+  const configPath = path.join(process.cwd(), 'grommet-toolbox.config.js');
+  if (!fileExists(configPath)) {
+    throw new Error(`[grommet]: Config not found: ${configPath}`);
+  }
+  return require(configPath).default;
+}
+
+export function throwError(err) {
+  throw new Error(err);
+}
+
+export function getBabelConfig() {
+  let babelrcPath = path.resolve(process.cwd(), '.babelrc');
+  try {
+    fs.accessSync(babelrcPath, fs.F_OK);
+  } catch (e) {
+    babelrcPath = path.resolve(__dirname, '../../.babelrc');
+  }
+
+  return JSON.parse(fs.readFileSync(babelrcPath));
+}
+
 export default {
   capitalize, dependenciesSupported, fileExists, generateProject,
-  nodeVersionSupported, npmVersionSupported, runNpmInstall, themes
+  getBabelConfig, loadConfig, nodeVersionSupported, npmVersionSupported,
+  runNpmInstall, themes, throwError
 };
