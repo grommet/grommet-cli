@@ -1,6 +1,8 @@
 /**
 * Node core dependencies
 **/
+require('babel-register');
+
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -142,10 +144,6 @@ export function loadConfig() {
   return require(configPath).default;
 }
 
-export function throwError(err) {
-  throw new Error(err);
-}
-
 export function getBabelConfig() {
   let babelrcPath = path.resolve(process.cwd(), '.babelrc');
   try {
@@ -160,5 +158,5 @@ export function getBabelConfig() {
 export default {
   capitalize, dependenciesSupported, fileExists, generateProject,
   getBabelConfig, loadConfig, nodeVersionSupported, npmVersionSupported,
-  runNpmInstall, themes, throwError
+  runNpmInstall, themes
 };

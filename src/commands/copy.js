@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import stream from 'stream';
+import os from 'os';
 
 /**
 * NPM dependencies
@@ -12,13 +13,29 @@ import stream from 'stream';
 import { transform } from 'babel-core';
 import chalk from 'chalk';
 import mkdirp from 'mkdirp';
-import recursive from 'recursive-readdir';
+import glob from 'glob';
+import globToRegExp from 'glob-to-regexp';
 import emoji from 'node-emoji';
 
 /**
 * Local dependencies
 **/
-import { getBabelConfig, loadConfig, throwError } from '../utils/cli';
+import { getBabelConfig, loadConfig } from '../utils/cli';
+
+const config = loadConfig();
+const base = config.base || process.cwd();
+const dist = config.dist || 'dist';
+const fullDestination = path.resolve(base, dist);
+const cpuCount = os.cpus().length;
+const delimiter = chalk.magenta('[grommet:copy]');
+
+function errorHandler(err) {
+  console.log(
+    `${delimiter}: ${chalk.red('failed')}`
+  );
+  console.error(err);
+  process.exit(1);
+}
 
 class BabelTransform extends stream.Transform {
   _transform(chunk, enc, next) {
@@ -51,7 +68,7 @@ function copyFile(file, destination, runBabel) {
           readStream.pipe(writeStream);
         }
 
-        writeStream.on('end', resolve);
+        writeStream.on('finish', resolve);
         writeStream.on('error', reject);
       }
     });
@@ -61,20 +78,24 @@ function copyFile(file, destination, runBabel) {
 function copyPaths(paths, copy) {
   return new Promise((resolve, reject) => {
     const copyPromises = [];
-    paths.split(',').forEach((currentPath) => {
+    paths.forEach((currentPath) => {
       currentPath = unescape(currentPath);
-      let destination = path.join(
-        process.cwd(), 'dist'
-      );
+      let destination = fullDestination;
       let runBabel = false;
       copy.some((asset) => {
         const pattern = asset.asset || asset;
 
-        const srcPath = currentPath.replace(process.cwd(), '').substring(1);
-        if (srcPath.startsWith(pattern)) {
+        const srcPath = currentPath.replace(base, '').substring(1);
+
+        const regex = globToRegExp(pattern, { globstar: true });
+        if (regex.test(srcPath)) {
+          // removing wildcards to create the basename
+          const baseName = pattern.replace(/\*|\!/g, '');
           destination = path.join(
             path.resolve(asset.dist || destination),
-            pattern !== srcPath ? srcPath.replace(pattern, '') : srcPath
+            baseName !== srcPath ?
+              srcPath.replace(baseName, '') : srcPath
+            // make sure to remove the matching part out of the final path
           );
           runBabel = asset.babel;
           return true;
@@ -91,7 +112,7 @@ function copyChunkExec(chunckedPaths) {
   return new Promise((resolve, reject) => {
     exec(
       `grommet copy -p ${chunckedPaths.join(',').replace(' ', '%20')}`,
-      (err, stdout) => {
+      err => {
         if (err) {
           reject(err);
         }
@@ -124,21 +145,18 @@ function shuffle(array) {
 function getPathsByAsset (asset) {
   return new Promise((resolve, reject) => {
     const assetPath = path.join(
-      process.cwd(), asset.asset ? asset.asset : asset
+      base, asset.asset ? asset.asset : asset
     );
-    if (fs.lstatSync(assetPath).isDirectory()) {
-      recursive(assetPath, ['.DS_Store'].concat(asset.ignores || []),
-        (err, files) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(files);
-          }
+    const ignore = ['.DS_Store', '**/.DS_Store'].concat(asset.ignores || []);
+    glob(assetPath, { nodir: true, dot: true, ignore },
+      (err, files) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(files);
         }
-      );
-    } else {
-      resolve([assetPath]);
-    }
+      }
+    );
   });
 }
 
@@ -156,25 +174,25 @@ function copyAssets(assets) {
       }
     );
     Promise.all(pathsPromises).then(() => {
-      if (pathsArray.length > 500) { // too many items, need to spawn process
+      if (pathsArray.length > 500 && cpuCount >= 2) {
+        // too many items, need to spawn process (if machine has multi-core)
         const paths = shuffle(pathsArray);
-        const size = 250;
         const chunckedPromises = [];
-        for (let i = 0; i < paths.length; i += size) {
-          const chunkedPaths = paths.slice(i, i + size);
+        const chunkSize = Math.ceil(paths.length / cpuCount);
+        for (let i = 0; i < paths.length; i += chunkSize) {
+          const chunkedPaths = paths.slice(i, i + chunkSize);
           const chunckedPromise = copyChunkExec(chunkedPaths);
           chunckedPromises.push(chunckedPromise);
         }
         Promise.all(chunckedPromises).then(resolve, reject);
       } else {
-        copyPaths(pathsArray.join(','), assets).then(resolve, reject);
+        copyPaths(pathsArray, assets).then(resolve, reject);
       }
     }, reject);
   });
 }
 
 export default function (vorpal) {
-  const delimiter = chalk.magenta('[grommet:copy]');
   vorpal
     .command(
       'copy',
@@ -186,7 +204,6 @@ export default function (vorpal) {
       `Comma-separated paths of content to copy.`
     )
     .action((args, cb) => {
-      const config = loadConfig();
 
       if (!config.copy) {
         console.warn(
@@ -195,7 +212,8 @@ export default function (vorpal) {
 
         cb();
       } else {
-        console.time(emoji.get('sparkles'));
+        const timeId = `${emoji.get('sparkles')} `;
+        console.time(timeId);
 
         if (args.options && args.options.paths) {
           console.log(
@@ -203,14 +221,15 @@ export default function (vorpal) {
           );
 
           copyPaths(
-            args.options.paths, config.copy
+            args.options.paths.split(','), config.copy
           ).then(() => {
             console.log(
               `${delimiter}: Paths successfully copied...`
             );
-            console.timeEnd(emoji.get('sparkles'));
+            console.timeEnd(timeId);
             cb();
-          }, throwError);
+          })
+          .catch(errorHandler);
         } else {
           console.log(
             `${delimiter}: ${emoji.get('hourglass')} Copying files to distribution folder...`
@@ -222,9 +241,9 @@ export default function (vorpal) {
             console.log(
               `${delimiter}: ${chalk.green('success')}`
             );
-            console.timeEnd(emoji.get('sparkles'));
+            console.timeEnd(timeId);
             cb();
-          }, throwError);
+          }).catch(errorHandler);
         }
       }
     });
