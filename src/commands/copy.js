@@ -16,6 +16,7 @@ import mkdirp from 'mkdirp';
 import glob from 'glob';
 import globToRegExp from 'glob-to-regexp';
 import emoji from 'node-emoji';
+import prettyHrtime from 'pretty-hrtime';
 
 /**
 * Local dependencies
@@ -23,9 +24,7 @@ import emoji from 'node-emoji';
 import { getBabelConfig, loadConfig } from '../utils/cli';
 
 const config = loadConfig();
-const base = config.base || process.cwd();
-const dist = config.dist || 'dist';
-const fullDestination = path.resolve(base, dist);
+
 const cpuCount = os.cpus().length;
 const delimiter = chalk.magenta('[grommet:copy]');
 
@@ -79,13 +78,13 @@ function copyPaths(paths, copy) {
   return new Promise((resolve, reject) => {
     const copyPromises = [];
     paths.forEach((currentPath) => {
-      currentPath = unescape(currentPath);
-      let destination = fullDestination;
+      currentPath = currentPath;
+      let destination = config.fullDestination;
       let runBabel = false;
       copy.some((asset) => {
         const pattern = asset.asset || asset;
 
-        const srcPath = currentPath.replace(base, '').substring(1);
+        const srcPath = currentPath.replace(config.base, '').substring(1);
 
         const regex = globToRegExp(pattern, { globstar: true });
         if (regex.test(srcPath)) {
@@ -145,7 +144,7 @@ function shuffle(array) {
 function getPathsByAsset (asset) {
   return new Promise((resolve, reject) => {
     const assetPath = path.join(
-      base, asset.asset ? asset.asset : asset
+      config.base, asset.asset ? asset.asset : asset
     );
     const ignore = ['.DS_Store', '**/.DS_Store'].concat(asset.ignores || []);
     glob(assetPath, { nodir: true, dot: true, ignore },
@@ -196,7 +195,7 @@ export default function (vorpal) {
   vorpal
     .command(
       'copy',
-      'Uses copy entry in local toolbox configuration to move files to ' +
+      'Uses copy entry in local grommet configuration to move files to ' +
       'the distribution folder'
     )
     .option(
@@ -212,8 +211,8 @@ export default function (vorpal) {
 
         cb();
       } else {
-        const timeId = `${emoji.get('sparkles')} `;
-        console.time(timeId);
+        const sucessLabel = `${emoji.get('sparkles')}`;
+        const timeId = process.hrtime();
 
         if (args.options && args.options.paths) {
           console.log(
@@ -221,12 +220,13 @@ export default function (vorpal) {
           );
 
           copyPaths(
-            args.options.paths.split(','), config.copy
+             unescape(args.options.paths).split(','), config.copy
           ).then(() => {
             console.log(
               `${delimiter}: Paths successfully copied...`
             );
-            console.timeEnd(timeId);
+            const t = process.hrtime(timeId);
+            console.log(`${sucessLabel} ${prettyHrtime(t)}`);
             cb();
           })
           .catch(errorHandler);
@@ -241,7 +241,8 @@ export default function (vorpal) {
             console.log(
               `${delimiter}: ${chalk.green('success')}`
             );
-            console.timeEnd(timeId);
+            const t = process.hrtime(timeId);
+            console.log(`${sucessLabel} ${prettyHrtime(t)}`);
             cb();
           }).catch(errorHandler);
         }

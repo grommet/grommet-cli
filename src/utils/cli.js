@@ -1,8 +1,8 @@
+require('babel-register');
+
 /**
 * Node core dependencies
 **/
-require('babel-register');
-
 import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -141,7 +141,13 @@ export function loadConfig() {
   if (!fileExists(configPath)) {
     throw new Error(`[grommet]: Config not found: ${configPath}`);
   }
-  return require(configPath).default;
+
+  const config = require(configPath).default;
+  config.base = config.base || process.cwd();
+  config.dist = config.dist || 'dist';
+  config.fullDestination = path.resolve(config.base, config.dist);
+
+  return config;
 }
 
 export function getBabelConfig() {
