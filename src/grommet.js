@@ -11,13 +11,15 @@ import vorpal from 'vorpal';
 **/
 import copyCommand from './commands/copy';
 import eslintCommand from './commands/eslint';
-import versionCommand from './commands/version';
 import newCommand from './commands/new';
+import scsslintCommand from './commands/scsslint';
+import versionCommand from './commands/version';
 
 const cli = vorpal();
 cli.use(copyCommand);
 cli.use(eslintCommand);
 cli.use(newCommand);
+cli.use(scsslintCommand);
 cli.use(versionCommand);
 
 if (process.argv.length === 2) {

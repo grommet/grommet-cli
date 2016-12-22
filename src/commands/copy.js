@@ -1,5 +1,5 @@
 /**
-* NPM dependencies
+* Node dependencies
 **/
 import { exec } from 'child_process';
 import path from 'path';
@@ -204,14 +204,13 @@ export default function (vorpal) {
     )
     .action((args, cb) => {
 
-      if (!config.copy) {
+      if (!config.copyAssets) {
         console.warn(
           `${delimiter}: ${chalk.yellow('Nothing to copy, you need to specify copy entry inside grommet-toolbox.config.js.')}`
         );
 
         cb();
       } else {
-        const sucessLabel = `${emoji.get('sparkles')}`;
         const timeId = process.hrtime();
 
         if (args.options && args.options.paths) {
@@ -220,13 +219,13 @@ export default function (vorpal) {
           );
 
           copyPaths(
-             unescape(args.options.paths).split(','), config.copy
+             unescape(args.options.paths).split(','), config.copyAssets
           ).then(() => {
             console.log(
               `${delimiter}: Paths successfully copied...`
             );
             const t = process.hrtime(timeId);
-            console.log(`${sucessLabel} ${prettyHrtime(t)}`);
+            console.log(`${emoji.get('sparkles')} ${prettyHrtime(t)}`);
             cb();
           })
           .catch(errorHandler);
@@ -236,13 +235,13 @@ export default function (vorpal) {
           );
 
           copyAssets(
-            config.copy
+            config.copyAssets
           ).then(() => {
             console.log(
               `${delimiter}: ${chalk.green('success')}`
             );
             const t = process.hrtime(timeId);
-            console.log(`${sucessLabel} ${prettyHrtime(t)}`);
+            console.log(`${emoji.get('sparkles')} ${prettyHrtime(t)}`);
             cb();
           }).catch(errorHandler);
         }

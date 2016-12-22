@@ -1,10 +1,16 @@
 /**
+* Node dependencies
+**/
+import path from 'path';
+import fs from 'fs';
+
+/**
 * NPM dependencies
 **/
 import chalk from 'chalk';
 import emoji from 'node-emoji';
 import prettyHrtime from 'pretty-hrtime';
-import Linter from 'eslint-parallel';
+import lint from 'sass-lint';
 
 /**
 * Local dependencies
@@ -13,7 +19,7 @@ import { loadConfig } from '../utils/cli';
 
 const config = loadConfig();
 
-const delimiter = chalk.magenta('[grommet:eslint]');
+const delimiter = chalk.magenta('[grommet:scsslint]');
 
 function errorHandler(err) {
   console.log(
@@ -23,18 +29,33 @@ function errorHandler(err) {
   process.exit(1);
 }
 
+let scssLintPath = path.resolve(process.cwd(), '.sass-lint.yml');
+try {
+  fs.accessSync(scssLintPath, fs.F_OK);
+} catch (e) {
+  scssLintPath = path.resolve(__dirname, '../.sass-lint.yml');
+}
+
+function lintSCSSAssets (assets) {
+  return new Promise((resolve) => {
+    const result = lint.lintFiles(assets.join(', '), {}, scssLintPath);
+    lint.outputResults(result, {}, scssLintPath);
+    resolve(result);
+  });
+}
+
 export default function (vorpal) {
   vorpal
     .command(
-      'eslint',
-      'Uses jsAssets entry in local grommet configuration to evaluate your ' +
-      'javascript code'
+      'scsslint',
+      'Uses scssAssets entry in local grommet configuration to evaluate your ' +
+      'scss code'
     )
     .action((args, cb) => {
 
-      if (!config.jsAssets) {
+      if (!config.scssAssets) {
         console.warn(
-          `${delimiter}: ${chalk.yellow('Nothing to lint, you need to specify jsAssets entry inside grommet-toolbox.config.js.')}`
+          `${delimiter}: ${chalk.yellow('Nothing to lint, you need to specify scssAssets entry inside grommet-toolbox.config.js.')}`
         );
 
         cb();
@@ -42,15 +63,12 @@ export default function (vorpal) {
         const timeId = process.hrtime();
 
         console.log(
-          `${delimiter}: ${emoji.get('hourglass')} Linting Javascript files...`
+          `${delimiter}: ${emoji.get('hourglass')} Linting SCSS files...`
         );
 
-        new Linter({
-          cache: true,
-          cwd: config.base
-        }).execute(config.jsAssets).then(
+        lintSCSSAssets(config.scssAssets).then(
           (result) => {
-            const failed = result.errorCount > 1 || result.warningCount > 1;
+            const failed = lint.resultCount(result);
             console.log(
               `${delimiter}: ${
                 failed ? chalk.red('failed') : chalk.green('success')
