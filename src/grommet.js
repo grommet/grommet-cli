@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 require('babel-register');
+require('dotenv').config({silent: true});
 
 /**
 * NPM dependencies
@@ -9,17 +10,15 @@ import vorpal from 'vorpal';
 /**
 * Local dependencies
 **/
-import copyCommand from './commands/copy';
-import eslintCommand from './commands/eslint';
+import checkCommand from './commands/check';
 import newCommand from './commands/new';
-import scsslintCommand from './commands/scsslint';
+import packCommand from './commands/pack';
 import versionCommand from './commands/version';
 
 const cli = vorpal();
-cli.use(copyCommand);
-cli.use(eslintCommand);
+cli.use(checkCommand);
 cli.use(newCommand);
-cli.use(scsslintCommand);
+cli.use(packCommand);
 cli.use(versionCommand);
 
 if (process.argv.length === 2) {
