@@ -1,3 +1,5 @@
+require('babel-register');
+
 /**
 * Node core dependencies
 **/
@@ -134,7 +136,19 @@ export function npmVersionSupported(npmVersion) {
   return npmVersion >= Number(supportedNpmVersion);
 }
 
+export function getBabelConfig() {
+  let babelrcPath = path.resolve(process.cwd(), '.babelrc');
+  try {
+    fs.accessSync(babelrcPath, fs.F_OK);
+  } catch (e) {
+    babelrcPath = path.resolve(__dirname, '../../.babelrc');
+  }
+
+  return JSON.parse(fs.readFileSync(babelrcPath));
+}
+
 export default {
   capitalize, dependenciesSupported, fileExists, generateProject,
-  nodeVersionSupported, npmVersionSupported, runNpmInstall, themes
+  getBabelConfig, nodeVersionSupported, npmVersionSupported,
+  runNpmInstall, themes
 };
