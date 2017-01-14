@@ -38,7 +38,7 @@ export default function (vorpal) {
     )
     .option(
       '-t, --type [type]',
-      `Type of the generated app (${config.appTypes.join()}). Defaults to full.
+      `Type of the generated app (${config.appTypes.join()}). Defaults to app.
       (You can press tab for autocomplete)`,
       config.appTypes
     )

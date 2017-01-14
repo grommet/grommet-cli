@@ -134,7 +134,7 @@ export default function (vorpal) {
   vorpal
     .command(
       'check',
-      'Runs Javascript/SASS linters for and execute tests for your project'
+      'Runs Javascript/SASS linters and execute tests for your project'
     )
     .option(
       '-u, --updateSnapshot',
