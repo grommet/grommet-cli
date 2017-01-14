@@ -73,17 +73,25 @@ function build(config) {
     // only handle response for production mode
     if (ENV === 'production') {
       handleResponse = (err, stats) => {
-        if (err) {
-          reject(err);
-        } else if (stats.compilation.errors.length) {
-          reject(stats.compilation.errors);
+        const statHandler = (stat) => {
+          if (err) {
+            reject(err);
+          } else if (stat.compilation.errors.length) {
+            reject(stat.compilation.errors);
+          } else {
+            console.log(stat.toString({
+              chunks: false,
+              colors: true
+            }));
+          }
+        };
+
+        if (stats.stats) { // multiple stats
+          stats.stats.forEach(statHandler);
         } else {
-          console.log(stats.toString({
-            chunks: false,
-            colors: true
-          }));
-          resolve();
+          statHandler(stats);
         }
+        resolve();
       };
     }
     const compiler = webpack(config, handleResponse);
@@ -91,27 +99,35 @@ function build(config) {
     if (ENV === 'development') {
       let firstCompilation = true;
       compiler.plugin('done', (stats) => {
-        if (stats.compilation.errors.length) {
-          errorHandler(stats.compilation.errors);
-        } else {
-          console.log(stats.toString({
-            chunks: false,
-            colors: true
-          }));
+        const statHandler = (stat) => {
+          if (stat.compilation.errors.length) {
+            errorHandler(stat.compilation.errors);
+          } else {
+            console.log(stat.toString({
+              chunks: false,
+              colors: true
+            }));
 
-          console.log(
-            `${delimiter}: ${chalk.green('success')}`
-          );
-
-          if (firstCompilation) {
             console.log(
-              `${delimiter}: Opening the browser at http://localhost:${PORT}`
+              `${delimiter}: ${chalk.green('success')}`
             );
 
-            spawn('open', [`http://localhost:${PORT}`]);
-          }
+            if (firstCompilation) {
+              console.log(
+                `${delimiter}: Opening the browser at http://localhost:${PORT}`
+              );
 
-          firstCompilation = false;
+              spawn('open', [`http://localhost:${PORT}`]);
+            }
+
+            firstCompilation = false;
+          }
+        };
+
+        if (stats.stats) { // multiple stats
+          stats.stats.forEach(statHandler);
+        } else {
+          statHandler(stats);
         }
       });
       runDevServer(compiler);

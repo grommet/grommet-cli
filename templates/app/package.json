@@ -1,0 +1,80 @@
+{
+  "name": "<%= appName %>",
+  "version": "0.1.0",
+  "main": "src/js/index.js",
+  "description": "<%= appDescription %>",
+  "repository": "<%= appRepository %>",
+  "license": "<%= appLicense %>",
+  "scripts": {
+    "test": "grommet check",
+    "dev-server": "nodemon ./server/dev",
+    "dev": "NODE_ENV=development grommet pack",
+    "dist": "grommet pack",
+    "dist-server": "babel -d ./dist-server ./server -s",
+    "start": "npm run dist-server && grommet pack && node ./dist-server/server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "grommet": "^1.1.0",
+    "morgan": "^1.7.0",
+    "path-to-regexp": "^1.7.0",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0",
+    "react-intl": "^2.1.5",
+    "react-redux": "^4.4.5",
+    "react-router": "^3.0.0",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.5.2",
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "^18.0.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-object-rest-spread": "^6.19.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-register": "^6.18.0",
+    "es6-promise": "^4.0.5",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-parallel": "^0.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "file-loader": "^0.9.0",
+    "grommet-cli": "^1.3.0",
+    "node-sass": "^4.1.1",
+    "nodemon": "^1.11.0",
+    "pre-commit": "^1.2.2",
+    "react-dev-utils": "^0.4.2",
+    "react-hot-loader": "v3.0.0-beta.6",
+    "react-test-renderer": "^15.4.1",
+    "sass-lint": "^1.10.2",
+    "sass-loader": "^4.1.1",
+    "webpack": "^1.14.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js}"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/",
+      "<rootDir>/templates/"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>[/\\\\](dist|templates|node_modules)[/\\\\]"
+    ]
+  },
+  "pre-commit": [
+    "test"
+  ]
+}

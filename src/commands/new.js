@@ -13,12 +13,12 @@ import shelljs from 'shelljs';
 * Local dependencies
 **/
 import {
-  dependenciesSupported, fileExists, generateProject, runNpmInstall, themes
+  dependenciesSupported, fileExists, generateProject, runModulesInstall, themes
 } from '../utils/cli';
 
 export default function (vorpal) {
   const config = {
-    appTypes: ['empty', 'full', 'static'],
+    appTypes: ['app', 'basic', 'docs'],
     appThemes: Object.keys(themes),
     cliPath: path.join(__dirname, '../../'),
     delimiter: vorpal.chalk.magenta('grommet'),
@@ -62,7 +62,7 @@ export default function (vorpal) {
     )
     .option(
       '-i, --noInstall',
-      `Skip npm install after generation is completed. Defaults to false.`
+      `Skip installing modules after generation is completed. Defaults to false.`
     )
     .validate((args) => {
       if (args.options.type && !config.appTypes.includes(args.options.type)) {
@@ -79,7 +79,7 @@ export default function (vorpal) {
         throw 'Unsupported version.';
       }
       const options = Object.assign({
-        type: 'full',
+        type: 'app',
         theme: 'grommet',
         app: args.app || 'app-name',
         description: '',
@@ -115,11 +115,11 @@ export default function (vorpal) {
               );
               if (options.noInstall) {
                 console.log(
-                  `[${config.delimiter}] NPM install has been skipped`
+                  `[${config.delimiter}] Module installation has been skipped`
                 );
                 return Promise.resolve();
               } else {
-                return runNpmInstall(newAppPath, config);
+                return runModulesInstall(newAppPath, config);
               }
             }).then(cb);
           } catch(err) {

@@ -32,10 +32,10 @@ new --help
 
 This CLI allows inline mode execution
 
-`grommet version` or `grommet new app-name --type static --theme hpe`
+`grommet version` or `grommet new app-name --type app --theme hpe`
 
 ## Credits
 
-Behind grommet-cli is the awesome [vorpal](http://vorpal.js.org) framework. 
+Behind grommet-cli is the awesome [vorpal](http://vorpal.js.org) framework.
 
 Made with :heart: by the Grommet team

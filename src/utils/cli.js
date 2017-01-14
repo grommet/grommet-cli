@@ -113,18 +113,34 @@ export function generateProject(from, to, options, config) {
   });
 }
 
-export function runNpmInstall (cwd, config) {
+export function runModulesInstall (cwd, config) {
   return new Promise((resolve) => {
     console.log(
-      `[${config.delimiter}] Installing Grommet dependencies...`
+      `[${config.delimiter}] Installing dependencies...`
     );
     console.log(
-      `[${config.delimiter}] If the install fails, make sure to delete your node_modules and run 'npm install' again...`
+      `[${config.delimiter}] If the install fails, make sure to delete your node_modules and run 'npm/yarn install' again...`
     );
-    const command = /^win/.test(os.platform()) ? 'npm.cmd' : 'npm';
+
+    // try yarn first
+    let command = /^win/.test(os.platform()) ? 'yarn.cmd' : 'yarn';
     spawn(
       command, ['install'], { stdio: 'inherit', cwd: cwd }
-    ).on('close', resolve);
+    )
+    .on('error', () => {
+      console.log(
+        `[${config.delimiter}] Installing can be faster if you install Yarn (https://yarnpkg.com/)...`
+      );
+      command = /^win/.test(os.platform()) ? 'npm.cmd' : 'npm';
+      spawn(
+        command, ['install'], { stdio: 'inherit', cwd: cwd }
+      ).on('close', resolve);
+    })
+    .on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      }
+    });
   });
 }
 
@@ -150,5 +166,5 @@ export function getBabelConfig() {
 export default {
   capitalize, dependenciesSupported, fileExists, generateProject,
   getBabelConfig, nodeVersionSupported, npmVersionSupported,
-  runNpmInstall, themes
+  runModulesInstall, themes
 };
