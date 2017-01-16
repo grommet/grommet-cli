@@ -13,7 +13,7 @@ export default {
     { path: 'dashboard', component: Dashboard },
     { path: 'tasks/:id', component: Task },
     { path: 'tasks', component: Tasks },
-    { path: '*', component: NotFound },
+    { path: '*', component: NotFound }
   ],
   indexRoute: { component: Dashboard }
 };

@@ -2,7 +2,8 @@ import path from 'path';
 import webpack from 'webpack';
 import StaticSiteGeneratorPlugin from 'static-site-generator-webpack-plugin';
 import reactRouterToArray from 'react-router-to-array';
-import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
+import WatchMissingNodeModulesPlugin from
+  'react-dev-utils/WatchMissingNodeModulesPlugin';
 import routes from './src/js/routes';
 
 const env = process.env.NODE_ENV || 'production';
@@ -84,7 +85,7 @@ const baseConfig = Object.assign({
     includePaths: [
       './node_modules'
     ]
-  },
+  }
 }, devConfig);
 
 const webpackConfigs = [baseConfig];

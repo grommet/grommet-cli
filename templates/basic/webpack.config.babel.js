@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
-import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
+import WatchMissingNodeModulesPlugin from
+  'react-dev-utils/WatchMissingNodeModulesPlugin';
 
 const env = process.env.NODE_ENV || 'production';
 
@@ -77,5 +78,5 @@ export default Object.assign({
     includePaths: [
       './node_modules'
     ]
-  },
+  }
 }, devConfig);

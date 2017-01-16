@@ -1,4 +1,8 @@
 {
   "presets": [ "es2015", "react" ],
-  "plugins": [ "react-hot-loader/babel" ]
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
 }

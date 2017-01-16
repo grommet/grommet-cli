@@ -10,5 +10,5 @@ export default {
   watchOptions: {
     ignored: /node_modules/
   },
-  historyApiFallback: true,
+  historyApiFallback: true
 };

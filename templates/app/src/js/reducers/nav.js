@@ -1,7 +1,7 @@
 // (C) Copyright 2014-2015 Hewlett Packard Enterprise Development LP
 
 import {
-  NAV_ACTIVATE, NAV_ENABLE, NAV_RESPONSIVE,
+  NAV_ACTIVATE, NAV_ENABLE, NAV_RESPONSIVE
 } from '../actions';
 
 import { createReducer } from './utils';

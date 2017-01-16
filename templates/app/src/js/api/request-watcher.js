@@ -15,6 +15,10 @@ function _getRequest(request) {
   }
 }
 
+const wsRegex = (
+  /^(wss?):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?$/i
+);
+
 export default class RequestWatcher {
 
   constructor(options = {}) {
@@ -26,9 +30,6 @@ export default class RequestWatcher {
     this._requests = [];
     this._nextRequestId = 1;
     if (this._options.webSocketUrl) {
-      const wsRegex = (
-        /^(wss?):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?$/i
-      );
       if (!wsRegex.test(this._options.webSocketUrl)) {
         throw new Error('Option webSocketUrl is not a valid socket url');
       }
