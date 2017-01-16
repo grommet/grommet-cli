@@ -42,7 +42,6 @@ if (env === 'production') {
   ]);
   devConfig.devtool = 'cheap-module-source-map';
   devConfig.entry = [
-    'react-hot-loader/patch',
     require.resolve('react-dev-utils/webpackHotDevClient'),
     './src/js/index.js'
   ];
