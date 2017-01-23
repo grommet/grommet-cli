@@ -10,7 +10,11 @@
     "describe": true,
     "jest": true,
     "document": true,
-    "test": true
+    "test": true,
+    "window": true,
+    "fetch": true,
+    "WebSocket": true,
+    "alert": true
   },
   "rules": {
     "react/jsx-filename-extension": 0,
@@ -19,6 +23,7 @@
     "react/jsx-first-prop-new-line": 0,
     "react/jsx-closing-bracket-location": 0,
     "react/no-multi-comp": 0,
+    "react/prefer-stateless-function": 0,
     "import/no-unresolved": 0,
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
