@@ -2,7 +2,6 @@
 * Node dependencies
 **/
 import path from 'path';
-import { spawn } from 'child_process';
 
 /**
 * NPM dependencies
@@ -11,6 +10,7 @@ import chalk from 'chalk';
 import emoji from 'node-emoji';
 import fs from 'fs-extra';
 import prettyHrtime from 'pretty-hrtime';
+import opener from 'opener';
 import rimraf from 'rimraf';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
@@ -117,7 +117,7 @@ function build(config) {
                 `${delimiter}: Opening the browser at http://localhost:${PORT}`
               );
 
-              spawn('open', [`http://localhost:${PORT}`]);
+              opener(`http://localhost:${PORT}`);
             }
 
             firstCompilation = false;

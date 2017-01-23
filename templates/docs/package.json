@@ -7,7 +7,7 @@
   "license": "<%= appLicense %>",
   "scripts": {
     "test": "grommet check",
-    "dev": "NODE_ENV=development grommet pack",
+    "dev": "cross-env NODE_ENV=development grommet pack",
     "dist": "grommet pack"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.18.0",
+    "cross-env": "^3.1.4",
     "ejs-compiled-loader": "^2.1.1",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",

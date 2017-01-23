@@ -8,7 +8,7 @@
   "scripts": {
     "test": "grommet check",
     "dev-server": "nodemon ./server/dev",
-    "dev": "NODE_ENV=development grommet pack",
+    "dev": "cross-env NODE_ENV=development grommet pack",
     "dist": "grommet pack",
     "dist-server": "babel -d ./dist-server ./server -s",
     "start": "npm run dist-server && grommet pack && node ./dist-server/server.js"
@@ -40,6 +40,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.18.0",
+    "cross-env": "^3.1.4",
     "es6-promise": "^4.0.5",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",
