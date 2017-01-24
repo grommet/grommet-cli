@@ -9,9 +9,9 @@
     "test": "grommet check",
     "dev-server": "nodemon ./server/dev",
     "dev": "cross-env NODE_ENV=development grommet pack",
-    "dist": "grommet pack",
+    "dist": "cross-env NODE_ENV=production grommet pack",
     "dist-server": "babel -d ./dist-server ./server -s",
-    "start": "npm run dist-server && grommet pack && node ./dist-server/server.js"
+    "start": "npm run dist-server && npm run dist && node ./dist-server/server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",

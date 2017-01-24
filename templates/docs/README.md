@@ -19,7 +19,7 @@ To run this application, execute the following commands:
   3. Create the app distribution to be used by a back-end server
 
     ```
-    $ grommet pack
+    $ NODE_ENV=production grommet pack
     ```
 
   4. Test and run linters:

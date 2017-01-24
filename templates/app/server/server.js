@@ -56,4 +56,4 @@ const server = http.createServer(app);
 server.listen(PORT);
 notifier.listen(server);
 
-console.log(`Server started, listening at port ${PORT}`);
+console.log(`Server started at http://localhost:${PORT}`);
