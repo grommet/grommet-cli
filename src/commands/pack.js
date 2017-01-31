@@ -29,29 +29,6 @@ function deleteDistributionFolder() {
   });
 }
 
-function copyPublicFolder() {
-  return new Promise((resolve, reject) => {
-    console.log(
-      `${delimiter}: Copying public folder...`
-    );
-
-    const publicFolder = path.resolve('public');
-    fs.exists(publicFolder, (exists) => {
-      if (exists) {
-        fs.copy(
-          path.resolve('public'), path.resolve('dist'),
-          (err) => err ? reject(err) : resolve()
-        );
-      } else {
-        console.log(
-          `${delimiter}: ${chalk.yellow('warning')} Public folder does not exist...`
-        );
-        resolve();
-      }
-    });
-  });
-}
-
 function runDevServer(compiler) {
   console.log(
     `${delimiter}: Starting dev server...`
@@ -210,7 +187,6 @@ export default function (vorpal) {
       const timeId = process.hrtime();
 
       deleteDistributionFolder()
-        .then(copyPublicFolder)
         .then(packProject)
         .then(() => {
           console.log(

@@ -1,11 +1,13 @@
 import path from 'path';
 import webpack from 'webpack';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import WatchMissingNodeModulesPlugin from
   'react-dev-utils/WatchMissingNodeModulesPlugin';
 
 const env = process.env.NODE_ENV || 'production';
 
 let plugins = [
+  new CopyWebpackPlugin([{ from: './public' }]),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(env)

@@ -1,5 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import StaticSiteGeneratorPlugin from 'static-site-generator-webpack-plugin';
 import reactRouterToArray from 'react-router-to-array';
 import WatchMissingNodeModulesPlugin from
@@ -9,6 +10,7 @@ import routes from './src/js/routes';
 const env = process.env.NODE_ENV || 'production';
 
 let plugins = [
+  new CopyWebpackPlugin([{ from: './public' }]),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(env)
