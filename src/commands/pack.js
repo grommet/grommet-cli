@@ -35,19 +35,17 @@ function deleteDistributionFolder() {
   }
 }
 
-function runDevServer(compiler) {
+function runDevServer(compiler, devServerConfig) {
   console.log(
     `${delimiter}: Starting dev server...`
   );
-  getDevServerConfig().then((devServerConfig) => {
-    const devServer = new WebpackDevServer(compiler, devServerConfig);
+  const devServer = new WebpackDevServer(compiler, devServerConfig);
 
-    devServer.listen(PORT, (err, result) => {
-      if (err) {
-        throw err;
-      }
-    });
-  }).catch(err => console.log(err));
+  devServer.listen(PORT, (err, result) => {
+    if (err) {
+      throw err;
+    }
+  });
 }
 
 function build(config) {
@@ -80,40 +78,45 @@ function build(config) {
     const compiler = webpack(config, handleResponse);
 
     if (ENV === 'development') {
-      let firstCompilation = true;
-      compiler.plugin('done', (stats) => {
-        const statHandler = (stat) => {
-          if (stat.compilation.errors.length) {
-            errorHandler(stat.compilation.errors);
-          } else {
-            console.log(stat.toString({
-              chunks: false,
-              colors: true
-            }));
+      getDevServerConfig().then((devServerConfig) => {
+        let firstCompilation = true;
+        compiler.plugin('done', (stats) => {
+          const statHandler = (stat) => {
+            if (stat.compilation.errors.length) {
+              errorHandler(stat.compilation.errors);
+            } else {
+              console.log(stat.toString({
+                chunks: false,
+                colors: true
+              }));
 
-            console.log(
-              `${delimiter}: ${chalk.green('success')}`
-            );
-
-            if (firstCompilation) {
               console.log(
-                `${delimiter}: Opening the browser at http://localhost:${PORT}`
+                `${delimiter}: ${chalk.green('success')}`
               );
 
-              opener(`http://localhost:${PORT}`);
+              if (firstCompilation) {
+                // https can be an object or just a boolean but either way will
+                // be truthy when it is turned on
+                const protocol = devServerConfig.https ? 'https' : 'http';
+                console.log(
+                  `${delimiter}: Opening the browser at ${protocol}://localhost:${PORT}`
+                );
+
+                opener(`${protocol}://localhost:${PORT}`);
+              }
+
+              firstCompilation = false;
             }
+          };
 
-            firstCompilation = false;
+          if (stats.stats) { // multiple stats
+            stats.stats.forEach(statHandler);
+          } else {
+            statHandler(stats);
           }
-        };
-
-        if (stats.stats) { // multiple stats
-          stats.stats.forEach(statHandler);
-        } else {
-          statHandler(stats);
-        }
+        });
+        runDevServer(compiler, devServerConfig);
       });
-      runDevServer(compiler);
     }
   });
 }
