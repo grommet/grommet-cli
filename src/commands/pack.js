@@ -21,12 +21,18 @@ const ENV = process.env.NODE_ENV || 'production';
 const PORT = process.env.PORT || 3000;
 
 function deleteDistributionFolder() {
-  return new Promise((resolve, reject) => {
-    console.log(
-      `${delimiter}: Deleting previously generated distribution folder...`
-    );
-    rimraf(path.resolve('dist'), (err) => err ? reject(err) : resolve());
-  });
+  if (ENV === 'production') {
+    return new Promise((resolve, reject) => {
+      console.log(
+        `${delimiter}: Deleting previously generated distribution folder...`
+      );
+      rimraf(path.resolve('dist'), (err) => err ? reject(err) : resolve());
+    });
+  } else {
+    // in dev mode, all resources are compiled and served from memory by
+    // webpack-dev-server so there is no reason to delete the dist folder
+    return Promise.resolve();
+  }
 }
 
 function runDevServer(compiler) {
