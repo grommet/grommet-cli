@@ -33,7 +33,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.6.0",
     "file-loader": "^0.9.0",
-    "grommet-cli": "^2.2.0",
+    "grommet-cli": "^3.0.0",
     "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
     "pre-commit": "^1.2.2",
@@ -41,7 +41,7 @@
     "react-test-renderer": "^15.4.1",
     "sass-lint": "^1.10.2",
     "sass-loader": "^4.1.1",
-    "webpack": "^1.14.0"
+    "webpack": "^2.2.1"
   },
   "jest": {
     "collectCoverage": true,

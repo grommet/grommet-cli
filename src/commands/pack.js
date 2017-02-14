@@ -78,7 +78,7 @@ function build(config) {
     const compiler = webpack(config, handleResponse);
 
     if (ENV === 'development') {
-      getDevServerConfig().then((devServerConfig) => {
+      const startServer = (devServerConfig) => {
         let firstCompilation = true;
         compiler.plugin('done', (stats) => {
           const statHandler = (stat) => {
@@ -116,7 +116,23 @@ function build(config) {
           }
         });
         runDevServer(compiler, devServerConfig);
-      });
+      };
+
+      let devServerConfig = config.devServer;
+      if (!devServerConfig && Array.isArray(config)) {
+        config.some((c) => {
+          if (c.devServer) {
+            devServerConfig = c.devServer;
+            return true;
+          }
+          return false;
+        });
+      }
+      if (devServerConfig) {
+        startServer(devServerConfig);
+      } else {
+        getDevServerConfig().then(startServer);
+      }
     }
   });
 }
@@ -146,6 +162,9 @@ function getDevServerConfig() {
     let devServerConfig = path.resolve(process.cwd(), 'devServer.config.js');
     fs.exists(devServerConfig, (exists) => {
       if (exists) {
+        console.warn(
+          `${delimiter}: devServerConfig has been deprecated. Move your configuration to webpack.config devServer entry.`
+        );
         resolve(require(devServerConfig));
       } else {
         devServerConfig = path.resolve(
@@ -153,6 +172,9 @@ function getDevServerConfig() {
         );
         fs.exists(devServerConfig, (exists) => {
           if (exists) {
+            console.warn(
+              `${delimiter}: devServerConfig has been deprecated. Move your configuration to webpack.config devServer entry.`
+            );
             resolve(require(devServerConfig).default);
           } else {
             reject('devServer config not found');

@@ -3,8 +3,6 @@ import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import StaticSiteGeneratorPlugin from 'static-site-generator-webpack-plugin';
 import reactRouterToArray from 'react-router-to-array';
-import WatchMissingNodeModulesPlugin from
-  'react-dev-utils/WatchMissingNodeModulesPlugin';
 import routes from './src/js/routes';
 
 const env = process.env.NODE_ENV || 'production';
@@ -15,13 +13,22 @@ let plugins = [
     'process.env': {
       NODE_ENV: JSON.stringify(env)
     }
-  }),
-  new webpack.optimize.OccurrenceOrderPlugin()
-  // new webpack.optimize.DedupePlugin()
+  })
 ];
+
+const loaderOptionsConfig = {
+  options: {
+    sassLoader: {
+      includePaths: [
+        './node_modules'
+      ]
+    }
+  }
+};
 
 const devConfig = {};
 if (env === 'production') {
+  loaderOptionsConfig.minimize = true;
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -39,15 +46,28 @@ if (env === 'production') {
   );
 } else {
   plugins = plugins.concat([
-    new webpack.HotModuleReplacementPlugin(),
-    new WatchMissingNodeModulesPlugin('./node_modules')
+    new webpack.HotModuleReplacementPlugin()
   ]);
   devConfig.devtool = 'cheap-module-source-map';
   devConfig.entry = [
     require.resolve('react-dev-utils/webpackHotDevClient'),
     './src/js/index.js'
   ];
+  devConfig.devServer = {
+    compress: true,
+    clientLogLevel: 'none',
+    contentBase: path.resolve('./dist'),
+    publicPath: '/',
+    quiet: true,
+    hot: true,
+    watchOptions: {
+      ignored: /node_modules/
+    },
+    historyApiFallback: true
+  };
 }
+
+plugins.push(new webpack.LoaderOptionsPlugin(loaderOptionsConfig));
 
 const baseConfig = Object.assign({
   entry: './src/js/index.js',
@@ -57,7 +77,7 @@ const baseConfig = Object.assign({
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js', '.scss', '.css', '.json']
+    extensions: ['.js', '.scss', '.css', '.json']
   },
   plugins,
   node: {
@@ -66,29 +86,24 @@ const baseConfig = Object.assign({
     tls: 'empty'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js/,
         exclude: /node_modules/,
-        loaders: ['babel']
+        loader: 'babel-loader'
       },
       {
         test: /\.scss$/,
-        loader: 'file?name=[name].css!sass?outputStyle=compressed'
+        use: [
+          { loader: 'file-loader', options: { name: '[name].css' } },
+          { loader: 'sass-loader', options: { outputStyle: 'compressed' } }
+        ]
       },
       {
         test: /\.ejs$/,
-        loader: 'ejs-compiled?htmlmin'
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
+        loader: 'ejs-compiled-loader',
+        options: { htmlmin: '' }
       }
-    ]
-  },
-  sassLoader: {
-    includePaths: [
-      './node_modules'
     ]
   }
 }, devConfig);

@@ -39,6 +39,7 @@
     "comma-dangle": 0,
     "no-return-assign": 0,
     "no-plusplus": 0,
-    "global-require": 0
+    "global-require": 0,
+    "object-property-newline": 0
   }
 }
