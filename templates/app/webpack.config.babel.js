@@ -54,7 +54,7 @@ export default Object.assign({
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js', '.scss', '.css']
+    extensions: ['', '.js', '.scss', '.css', '.json']
   },
   plugins,
   node: {
@@ -72,6 +72,10 @@ export default Object.assign({
       {
         test: /\.scss$/,
         loader: 'file?name=[name].css!sass?outputStyle=compressed'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },

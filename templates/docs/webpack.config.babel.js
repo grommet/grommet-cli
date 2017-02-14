@@ -57,7 +57,7 @@ const baseConfig = Object.assign({
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js', '.scss', '.css']
+    extensions: ['', '.js', '.scss', '.css', '.json']
   },
   plugins,
   node: {
@@ -79,6 +79,10 @@ const baseConfig = Object.assign({
       {
         test: /\.ejs$/,
         loader: 'ejs-compiled?htmlmin'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },
