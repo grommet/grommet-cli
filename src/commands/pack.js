@@ -18,7 +18,7 @@ import WebpackDevServer from 'webpack-dev-server';
 const delimiter = chalk.magenta('[grommet:pack]');
 
 const ENV = process.env.NODE_ENV || 'production';
-const PORT = process.env.PORT || 3000;
+let port = process.env.PORT || 3000;
 
 function deleteDistributionFolder() {
   if (ENV === 'production') {
@@ -40,8 +40,10 @@ function runDevServer(compiler, devServerConfig) {
     `${delimiter}: Starting dev server...`
   );
   const devServer = new WebpackDevServer(compiler, devServerConfig);
-
-  devServer.listen(PORT, (err, result) => {
+  if (!process.env.PORT && devServerConfig.port) {
+    port = devServerConfig.port;
+  }
+  devServer.listen(port, (err, result) => {
     if (err) {
       throw err;
     }
@@ -99,10 +101,10 @@ function build(config) {
                 // be truthy when it is turned on
                 const protocol = devServerConfig.https ? 'https' : 'http';
                 console.log(
-                  `${delimiter}: Opening the browser at ${protocol}://localhost:${PORT}`
+                  `${delimiter}: Opening the browser at ${protocol}://localhost:${port}`
                 );
 
-                opener(`${protocol}://localhost:${PORT}`);
+                opener(`${protocol}://localhost:${port}`);
               }
 
               firstCompilation = false;
