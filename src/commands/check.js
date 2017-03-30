@@ -29,7 +29,7 @@ function errorHandler(err) {
 function runJsLint() {
   return new Promise((resolve, reject) => {
     console.log(
-      `${delimiter}: Running Javascrit linting...`
+      `${delimiter}: Running Javascript linting...`
     );
     const eslintChild = fork(path.resolve(__dirname, 'eslint'));
     eslintChild.on('exit', (code) => {
