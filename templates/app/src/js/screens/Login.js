@@ -33,7 +33,10 @@ class Login extends Component {
 
   _onSubmit(fields) {
     const { dispatch } = this.props;
-    dispatch(login(fields.username, fields.password, '/dashboard'));
+    const { router } = this.context;
+    dispatch(login(fields.username, fields.password, () => (
+      router.history.push('/dashboard')
+    )));
   }
 
   render() {
@@ -74,6 +77,10 @@ Login.propTypes = {
   session: PropTypes.shape({
     error: PropTypes.string
   })
+};
+
+Login.contextTypes = {
+  router: PropTypes.object.isRequired,
 };
 
 const select = state => ({

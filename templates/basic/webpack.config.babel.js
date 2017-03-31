@@ -101,7 +101,14 @@ export default Object.assign({
         test: /\.scss$/,
         use: [
           { loader: 'file-loader', options: { name: '[name].css' } },
-          { loader: 'sass-loader', options: { outputStyle: 'compressed' } }
+          { loader: 'sass-loader',
+            options: {
+              outputStyle: 'compressed',
+              includePaths: [
+                './node_modules'
+              ]
+            }
+          }
         ]
       }
     ]

@@ -1,4 +1,3 @@
-import { browserHistory as history } from 'react-router';
 import { SESSION_LOAD, SESSION_LOGIN, SESSION_LOGOUT } from '../actions';
 import { deleteSession, postSession } from '../api/session';
 import { updateHeaders } from '../api/utils';
@@ -13,12 +12,12 @@ export function initialize() {
         type: SESSION_LOAD, payload: { email, name, token }
       });
     } else {
-      history.push('/login');
+      window.location = '/login';
     }
   };
 }
 
-export function login(email, password, targetPath) {
+export function login(email, password, done) {
   return dispatch => (
     postSession(email, password)
       .then((payload) => {
@@ -34,7 +33,7 @@ export function login(email, password, targetPath) {
             'browsing mode.'
           );
         }
-        history.push(targetPath);
+        done();
       })
       .catch(payload => dispatch({
         type: SESSION_LOGIN,

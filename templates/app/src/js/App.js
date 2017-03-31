@@ -1,12 +1,11 @@
 import React from 'react';
-import { Router, browserHistory as history } from 'react-router';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import { getCurrentLocale, getLocaleData } from 'grommet/utils/Locale';
 import { Provider } from 'react-redux';
 import { initialize } from './actions/session';
 import store from './store';
-import routes from './routes';
+import Main from './components/Main';
 
 const locale = getCurrentLocale();
 addLocaleData(en);
@@ -18,13 +17,14 @@ try {
 }
 const localeData = getLocaleData(messages, locale);
 
-store.dispatch(initialize(window.location.pathname));
+if (window.location.pathname !== '/login') {
+  store.dispatch(initialize(window.location.pathname));
+}
 
 export default () => (
   <Provider store={store}>
     <IntlProvider locale={localeData.locale} messages={localeData.messages}>
-      <Router routes={routes} history={history}
-        onUpdate={() => document.getElementById('content').focus()} />
+      <Main />
     </IntlProvider>
   </Provider>
 );

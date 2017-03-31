@@ -1,11 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import App from 'grommet/components/App';
 import Split from 'grommet/components/Split';
 
 import NavSidebar from './NavSidebar';
 import { navResponsive } from '../actions/nav';
+
+import Login from '../screens/Login';
+import Dashboard from '../screens/Dashboard';
+import Tasks from '../screens/Tasks';
+import Task from '../screens/Task';
+import NotFound from '../screens/NotFound';
 
 class Main extends Component {
 
@@ -31,18 +38,26 @@ class Main extends Component {
 
     return (
       <App centered={false}>
-        <Split priority={priority} flex='right'
-          onResponsive={this._onResponsive}>
-          {nav}
-          {this.props.children}
-        </Split>
+        <Router>
+          <Split priority={priority} flex='right'
+            onResponsive={this._onResponsive}>
+            {nav}
+            <Switch>
+              <Route exact={true} path='/' component={Dashboard} />
+              <Route path='/dashboard' component={Dashboard} />
+              <Route path='/login' component={Login} />
+              <Route path='/tasks/:id' component={Task} />
+              <Route path='/tasks' component={Tasks} />
+              <Route path='/*' component={NotFound} />
+            </Switch>
+          </Split>
+        </Router>
       </App>
     );
   }
 }
 
 Main.propTypes = {
-  children: PropTypes.any.isRequired,
   dispatch: PropTypes.func.isRequired,
   nav: PropTypes.shape({
     active: PropTypes.bool,

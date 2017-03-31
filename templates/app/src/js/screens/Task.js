@@ -22,13 +22,13 @@ import { pageLoaded } from './utils';
 class Task extends Component {
 
   componentDidMount() {
-    const { params, dispatch } = this.props;
+    const { match: { params }, dispatch } = this.props;
     pageLoaded('Task');
     dispatch(loadTask(params.id));
   }
 
   componentWillUnmount() {
-    const { params, dispatch } = this.props;
+    const { match: { params }, dispatch } = this.props;
     dispatch(unloadTask(params.id));
   }
 
@@ -87,7 +87,7 @@ class Task extends Component {
 Task.propTypes = {
   dispatch: PropTypes.func.isRequired,
   error: PropTypes.object,
-  params: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   task: PropTypes.object
 };
 

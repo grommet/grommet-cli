@@ -39,7 +39,6 @@ jspm_packages
 bin/**
 dist/**
 dist-server/**
-
 .eslintcache
-
 .DS_Store
+.vscode
