@@ -50,7 +50,7 @@ function runDevServer(compiler, devServerConfig) {
   });
 }
 
-function build(config) {
+function build(config, options) {
   return new Promise((resolve, reject) => {
     let handleResponse;
     // only handle response for production mode
@@ -96,7 +96,7 @@ function build(config) {
                 `${delimiter}: ${chalk.green('success')}`
               );
 
-              if (firstCompilation) {
+              if (!options['skip-open'] && firstCompilation) {
                 // https can be an object or just a boolean but either way will
                 // be truthy when it is turned on
                 const protocol = devServerConfig.https ? 'https' : 'http';
@@ -187,13 +187,13 @@ function getDevServerConfig() {
   });
 }
 
-function packProject() {
+function packProject(options) {
   return new Promise((resolve, reject) => {
     console.log(
       `${delimiter}: Running webpack...`
     );
     getWebpackConfig().then(
-      (config) => build(config).then(resolve, reject), reject
+      (config) => build(config, options).then(resolve, reject), reject
     );
   });
 }
@@ -216,11 +216,12 @@ export default function (vorpal) {
       'pack',
       'Builds a grommet application for development and/or production'
     )
+    .option('--skip-open', 'Skip browser opening on first compilation')
     .action((args, cb) => {
       const timeId = process.hrtime();
 
       deleteDistributionFolder()
-        .then(packProject)
+        .then(() => packProject(args.options))
         .then(() => {
           console.log(
             `${delimiter}: ${chalk.green('success')}`
