@@ -121,7 +121,10 @@ export default function (vorpal) {
               } else {
                 return runModulesInstall(newAppPath, config);
               }
-            }).then(cb);
+            })
+            .then(cb)
+            // if something fails during the installation of modules the cli should NOT fail.
+            .catch(() => process.exit(0));
           } catch(err) {
             shelljs.rm('-rf', newAppPath);
             throw err;
