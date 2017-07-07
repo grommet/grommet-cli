@@ -39,7 +39,7 @@ function runJsLint() {
         resolve();
       }
     });
-    eslintChild.send('**/*.js');
+    eslintChild.send('**/*.{js,jsx}');
   });
 }
 
