@@ -120,7 +120,7 @@ function runTests(updateSnapshot) {
 
     jest.runCLI({
       config: config
-    }, process.cwd(), (result) => {
+    }, [process.cwd()], (result) => {
       if(result.numFailedTests || result.numFailedTestSuites) {
         reject('Tests Failed');
       } else {

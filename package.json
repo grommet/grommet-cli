@@ -1,6 +1,6 @@
 {
   "name": "grommet-cli",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "main": "src/grommet.js",
   "description": "Command line interface for Grommet.",
   "authors": [
@@ -29,7 +29,8 @@
     "fs-extra": "^1.0.0",
     "glob": "^7.1.1",
     "glob-to-regexp": "^0.3.0",
-    "jest-cli": "^18.1.0",
+    "jest-cli": "^20.0.4",
+    "jest-file-exists": "^19.0.0",
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.4.3",
     "opener": "^1.4.2",
