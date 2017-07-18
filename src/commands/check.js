@@ -118,9 +118,7 @@ function runTests(updateSnapshot) {
       updateSnapshot
     }, packageJSON.jest);
 
-    jest.runCLI({
-      config: config
-    }, [process.cwd()], (result) => {
+    jest.runCLI(config, [process.cwd()], (result) => {
       if(result.numFailedTests || result.numFailedTestSuites) {
         reject('Tests Failed');
       } else {
