@@ -14,8 +14,8 @@ process.on('message', (assets) => {
   try {
     fs.accessSync(scssLintPath, fs.F_OK);
   } catch (e) {
-    console.log('.sass-lint.yml not found');
-    process.exit(1);
+    console.warn('.sass-lint.yml not found. skipping lint.');
+    process.exit(0);
   }
 
   const result = lint.lintFiles(assets, {}, scssLintPath);
