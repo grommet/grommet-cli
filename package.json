@@ -25,7 +25,7 @@
     "chalk": "^2.0.1",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.6",
-    "eslint-parallel": "^0.2.1",
+    "eslint-parallel": "^0.3.0",
     "fs-extra": "^4.0.0",
     "glob": "^7.1.2",
     "glob-to-regexp": "^0.3.0",
@@ -43,7 +43,9 @@
     "webpack-dev-server": "^2.6.1"
   },
   "peerDependencies": {
-    "jest-cli": ">=20.0.0"
+    "eslint": ">=3.0.0",
+    "jest-cli": ">=20.0.0",
+    "sass-lint": ">=1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
