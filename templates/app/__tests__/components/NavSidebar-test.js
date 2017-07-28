@@ -15,6 +15,10 @@ const routes = [{
   component: () => <NavSidebar />
 }];
 
+// needed because this:
+// https://github.com/facebook/jest/issues/1353
+jest.mock('react-dom');
+
 test('NavSidebar renders', () => {
   const component = renderer.create(
     <Provider store={store}>

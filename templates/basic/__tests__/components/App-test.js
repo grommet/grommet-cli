@@ -3,6 +3,10 @@ import renderer from 'react-test-renderer';
 
 import App from '../../src/js/App';
 
+// needed because this:
+// https://github.com/facebook/jest/issues/1353
+jest.mock('react-dom');
+
 test('App renders', () => {
   const component = renderer.create(
     <App />
