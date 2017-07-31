@@ -59,7 +59,7 @@ class Tasks extends Component {
         </Box>
       );
     } else {
-      const tasksNode = (tasks || []).map((task, index) => (
+      const tasksNode = (tasks || []).map(task => (
         <ListItem
           key={`task_${task.id}`}
           justify='between'
