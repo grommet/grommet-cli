@@ -24,7 +24,6 @@ import {
 import { pageLoaded } from './utils';
 
 class Dashboard extends Component {
-
   componentDidMount() {
     pageLoaded('Dashboard');
     this.props.dispatch(loadDashboard());
@@ -42,25 +41,41 @@ class Dashboard extends Component {
     let listNode;
     if (error) {
       errorNode = (
-        <Notification status='critical' size='large' state={error.message}
-          message='An unexpected error happened, please try again later' />
+        <Notification
+          status='critical'
+          size='large'
+          state={error.message}
+          message='An unexpected error happened, please try again later'
+        />
       );
     } else if (tasks.length === 0) {
       listNode = (
-        <Box direction='row' responsive={false}
-          pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}>
+        <Box
+          direction='row'
+          responsive={false}
+          pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}
+        >
           <Spinning /><span>Loading...</span>
         </Box>
       );
     } else {
-      const tasksNode = (tasks || []).map((task, index) => (
-        <ListItem key={index} justify='between'>
+      const tasksNode = (tasks || []).map(task => (
+        <ListItem
+          key={`task_${task.id}`}
+          justify='between'
+        >
           <Label><Anchor path={`/tasks/${task.id}`} label={task.name} /></Label>
-          <Box direction='row' responsive={false}
-            pad={{ between: 'small' }}>
-            <Value value={task.percentComplete}
+          <Box
+            direction='row'
+            responsive={false}
+            pad={{ between: 'small' }}
+          >
+            <Value
+              value={task.percentComplete}
               units='%'
-              align='start' size='small' />
+              align='start'
+              size='small'
+            />
             <Meter value={task.percentComplete} />
           </Box>
         </ListItem>
@@ -75,8 +90,12 @@ class Dashboard extends Component {
 
     return (
       <Article primary={true}>
-        <Header direction='row' justify='between' size='large'
-          pad={{ horizontal: 'medium', between: 'small' }}>
+        <Header
+          direction='row'
+          justify='between'
+          size='large'
+          pad={{ horizontal: 'medium', between: 'small' }}
+        >
           <NavControl />
         </Header>
         {errorNode}
@@ -96,6 +115,11 @@ class Dashboard extends Component {
     );
   }
 }
+
+Dashboard.defaultProps = {
+  error: undefined,
+  tasks: []
+};
 
 Dashboard.propTypes = {
   dispatch: PropTypes.func.isRequired,

@@ -20,7 +20,6 @@ import {
 import { pageLoaded } from './utils';
 
 class Task extends Component {
-
   componentDidMount() {
     const { match: { params }, dispatch } = this.props;
     pageLoaded('Task');
@@ -39,13 +38,20 @@ class Task extends Component {
     let taskNode;
     if (error) {
       errorNode = (
-        <Notification status='critical' size='large' state={error.message}
-          message='An unexpected error happened, please try again later' />
+        <Notification
+          status='critical'
+          size='large'
+          state={error.message}
+          message='An unexpected error happened, please try again later'
+        />
       );
     } else if (!task) {
       taskNode = (
-        <Box direction='row' responsive={false}
-          pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}>
+        <Box
+          direction='row'
+          responsive={false}
+          pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}
+        >
           <Spinning /><span>Loading...</span>
         </Box>
       );
@@ -53,11 +59,17 @@ class Task extends Component {
       taskNode = (
         <Box pad='medium'>
           <Label>Status: {task.status}</Label>
-          <Box direction='row' responsive={false}
-            pad={{ between: 'small' }}>
-            <Value value={task.percentComplete}
+          <Box
+            direction='row'
+            responsive={false}
+            pad={{ between: 'small' }}
+          >
+            <Value
+              value={task.percentComplete}
               units='%'
-              align='start' size='small' />
+              align='start'
+              size='small'
+            />
             <Meter value={task.percentComplete} />
           </Box>
         </Box>
@@ -66,9 +78,14 @@ class Task extends Component {
 
     return (
       <Article primary={true} full={true}>
-        <Header direction='row' size='large' colorIndex='light-2'
-          align='center' responsive={false}
-          pad={{ horizontal: 'small' }}>
+        <Header
+          direction='row'
+          size='large'
+          colorIndex='light-2'
+          align='center'
+          responsive={false}
+          pad={{ horizontal: 'small' }}
+        >
           <Anchor path='/tasks'>
             <LinkPrevious a11yTitle='Back to Tasks' />
           </Anchor>
@@ -83,6 +100,11 @@ class Task extends Component {
     );
   }
 }
+
+Task.defaultProps = {
+  error: undefined,
+  task: undefined
+};
 
 Task.propTypes = {
   dispatch: PropTypes.func.isRequired,

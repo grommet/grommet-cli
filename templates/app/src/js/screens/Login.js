@@ -16,7 +16,6 @@ import { navEnable } from '../actions/nav';
 import { pageLoaded } from './utils';
 
 class Login extends Component {
-
   constructor() {
     super();
     this._onSubmit = this._onSubmit.bind(this);
@@ -46,9 +45,15 @@ class Login extends Component {
       <Split flex='left' separator={true}>
 
         <Article>
-          <Section full={true} colorIndex='brand' texture='url(img/splash.png)'
-            pad='large' justify='center' align='center'>
-            <Heading tag='h1'><strong><%= appTitle %></strong></Heading>
+          <Section
+            full={true}
+            colorIndex='brand'
+            texture='url(img/splash.png)'
+            pad='large'
+            justify='center'
+            align='center'
+          >
+            <Heading tag='h1' strong={true}><%= appTitle %></Heading>
             <Paragraph align='center' size='large'>
               Development with Grommet is cool.
             </Paragraph>
@@ -57,12 +62,19 @@ class Login extends Component {
 
         <Sidebar justify='between' align='center' pad='none' size='large'>
           <span />
-          <LoginForm align='start'
+          <LoginForm
+            align='start'
             logo={<Logo className='logo' colorIndex='brand' />}
             title='<%= appTitle %>'
-            onSubmit={this._onSubmit} errors={[error]} usernameType='text' />
-          <Footer direction='row' size='small'
-            pad={{ horizontal: 'medium', vertical: 'small' }}>
+            onSubmit={this._onSubmit}
+            errors={[error]}
+            usernameType='text'
+          />
+          <Footer
+            direction='row'
+            size='small'
+            pad={{ horizontal: 'medium', vertical: 'small' }}
+          >
             <span className='secondary'>&copy; 2017 Grommet Labs</span>
           </Footer>
         </Sidebar>
@@ -71,6 +83,12 @@ class Login extends Component {
     );
   }
 }
+
+Login.defaultProps = {
+  session: {
+    error: undefined
+  }
+};
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,

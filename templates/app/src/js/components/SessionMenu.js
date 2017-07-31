@@ -10,7 +10,6 @@ import UserIcon from 'grommet/components/icons/base/User';
 import { logout } from '../actions/session';
 
 class SessionMenu extends Component {
-
   constructor() {
     super();
     this._onLogout = this._onLogout.bind(this);
@@ -25,8 +24,12 @@ class SessionMenu extends Component {
   render() {
     const { dropAlign, colorIndex, session: { name: userName } } = this.props;
     return (
-      <Menu icon={<UserIcon />} dropAlign={dropAlign}
-        colorIndex={colorIndex} a11yTitle='Session'>
+      <Menu
+        icon={<UserIcon />}
+        dropAlign={dropAlign}
+        colorIndex={colorIndex}
+        a11yTitle='Session'
+      >
         <Box pad='medium'>
           <Heading tag='h3' margin='none'>{userName}</Heading>
         </Box>
@@ -34,8 +37,12 @@ class SessionMenu extends Component {
       </Menu>
     );
   }
-
 }
+
+SessionMenu.defaultProps = {
+  colorIndex: undefined,
+  dropAlign: undefined,
+};
 
 SessionMenu.propTypes = {
   colorIndex: PropTypes.string,

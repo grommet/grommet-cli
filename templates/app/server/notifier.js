@@ -20,7 +20,6 @@ function parseQuery(string) {
 }
 
 class Connection {
-
   constructor(socket, routes) {
     this._requests = [];
     this._socket = socket;
@@ -140,7 +139,6 @@ class Connection {
 }
 
 export default class Notifier {
-
   constructor() {
     this._connections = [];
     this._routes = [];

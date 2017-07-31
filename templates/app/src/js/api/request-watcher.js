@@ -20,7 +20,6 @@ const wsRegex = (
 );
 
 export default class RequestWatcher {
-
   constructor(options = {}) {
     this._options = Object.assign({
       reconnectTimeout: 5000, // 5s

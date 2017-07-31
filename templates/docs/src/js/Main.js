@@ -11,14 +11,23 @@ import { browserHistory } from 'react-router';
 const Main = props => (
   <App centered={false}>
     <Header direction='row' justify='between' pad={{ horizontal: 'medium' }}>
-      <Title><Anchor href='/' onClick={(event) => {
-        event.preventDefault();
-        browserHistory.push('/');
-      }} label='<%= appTitle %>' /></Title>
-      <Anchor href='/page1' onClick={(event) => {
-        event.preventDefault();
-        browserHistory.push('/page1');
-      }} label='Page 1' />
+      <Title>
+        <Anchor
+          href='/'
+          onClick={(event) => {
+            event.preventDefault();
+            browserHistory.push('/');
+          }}
+          label='<%= appTitle %>' />
+      </Title>
+      <Anchor
+        href='/page1'
+        onClick={(event) => {
+          event.preventDefault();
+          browserHistory.push('/page1');
+        }}
+        label='Page 1'
+      />
     </Header>
     <Box pad={{ horizontal: 'medium' }}>
       {props.children}

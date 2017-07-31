@@ -15,7 +15,6 @@ import Task from '../screens/Task';
 import NotFound from '../screens/NotFound';
 
 class Main extends Component {
-
   constructor() {
     super();
     this._onResponsive = this._onResponsive.bind(this);
@@ -39,8 +38,11 @@ class Main extends Component {
     return (
       <App centered={false}>
         <Router>
-          <Split priority={priority} flex='right'
-            onResponsive={this._onResponsive}>
+          <Split
+            priority={priority}
+            flex='right'
+            onResponsive={this._onResponsive}
+          >
             {nav}
             <Switch>
               <Route exact={true} path='/' component={Dashboard} />
@@ -56,6 +58,14 @@ class Main extends Component {
     );
   }
 }
+
+Main.defaultProps = {
+  nav: {
+    active: true, // start with nav active
+    enabled: true, // start with nav disabled
+    responsive: 'multiple'
+  }
+};
 
 Main.propTypes = {
   dispatch: PropTypes.func.isRequired,

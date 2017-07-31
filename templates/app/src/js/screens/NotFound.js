@@ -10,7 +10,6 @@ import { navEnable } from '../actions/nav';
 import { pageLoaded } from './utils';
 
 class NotFound extends Component {
-
   componentDidMount() {
     pageLoaded('Not Found');
     this.props.dispatch(navEnable(false));

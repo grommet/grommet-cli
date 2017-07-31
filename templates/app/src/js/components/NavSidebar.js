@@ -15,7 +15,6 @@ import SessionMenu from './SessionMenu';
 import { navActivate } from '../actions/nav';
 
 class NavSidebar extends Component {
-
   constructor() {
     super();
     this._onClose = this._onClose.bind(this);
@@ -39,8 +38,12 @@ class NavSidebar extends Component {
             <Logo />
             <span><%= appTitle %></span>
           </Title>
-          <Button icon={<CloseIcon />} onClick={this._onClose} plain={true}
-            a11yTitle='Close Menu' />
+          <Button
+            icon={<CloseIcon />}
+            onClick={this._onClose}
+            plain={true}
+            a11yTitle='Close Menu'
+          />
         </Header>
         <Menu fill={true} primary={true}>
           {links}
@@ -51,8 +54,15 @@ class NavSidebar extends Component {
       </Sidebar>
     );
   }
-
 }
+
+NavSidebar.defaultProps = {
+  nav: {
+    active: true, // start with nav active
+    enabled: true, // start with nav disabled
+    responsive: 'multiple'
+  }
+};
 
 NavSidebar.propTypes = {
   dispatch: PropTypes.func.isRequired,

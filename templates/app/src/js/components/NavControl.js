@@ -19,8 +19,11 @@ class NavControl extends Component {
     if (!active) {
       result = (
         <Button onClick={() => this.props.dispatch(navActivate(true))}>
-          <Box direction='row' responsive={false}
-            pad={{ between: 'small' }}>
+          <Box
+            direction='row'
+            responsive={false}
+            pad={{ between: 'small' }}
+          >
             <Logo />
             {title}
           </Box>
@@ -32,6 +35,15 @@ class NavControl extends Component {
     return result;
   }
 }
+
+NavControl.defaultProps = {
+  name: undefined,
+  nav: {
+    active: true, // start with nav active
+    enabled: true, // start with nav disabled
+    responsive: 'multiple'
+  }
+};
 
 NavControl.propTypes = {
   dispatch: PropTypes.func.isRequired,
