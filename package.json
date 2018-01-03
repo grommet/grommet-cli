@@ -38,6 +38,7 @@
     "rimraf": "^2.6.1",
     "sass-lint": "^1.10.2",
     "shelljs": "^0.7.8",
+    "tarball-extract": "^0.0.6",
     "vorpal": "https://github.com/alansouzati/vorpal/tarball/EXIT_ON_PARSE",
     "walk": "^2.3.9",
     "webpack": "^3.4.1",

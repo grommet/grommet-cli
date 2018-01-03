@@ -127,20 +127,20 @@ export function runModulesInstall (cwd, config) {
     spawn(
       command, ['install'], { stdio: 'inherit', cwd: cwd }
     )
-    .on('error', () => {
-      console.log(
-        `[${config.delimiter}] Installing can be faster if you install Yarn (https://yarnpkg.com/)...`
-      );
-      command = /^win/.test(os.platform()) ? 'npm.cmd' : 'npm';
-      spawn(
-        command, ['install'], { stdio: 'inherit', cwd: cwd }
-      ).on('close', resolve);
-    })
-    .on('close', (code) => {
-      if (code === 0) {
-        resolve();
-      }
-    });
+      .on('error', () => {
+        console.log(
+          `[${config.delimiter}] Installing can be faster if you install Yarn (https://yarnpkg.com/)...`
+        );
+        command = /^win/.test(os.platform()) ? 'npm.cmd' : 'npm';
+        spawn(
+          command, ['install'], { stdio: 'inherit', cwd: cwd }
+        ).on('close', resolve);
+      })
+      .on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        }
+      });
   });
 }
 
