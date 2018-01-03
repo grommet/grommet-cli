@@ -2,6 +2,7 @@
 * Node dependencies
 **/
 import path from 'path';
+import del from 'del';
 
 /**
 * NPM dependencies
@@ -9,6 +10,8 @@ import path from 'path';
 import chalk from 'chalk';
 import emoji from 'node-emoji';
 import fs from 'fs-extra';
+import cp from 'child_process';
+import tarball from 'tarball-extract';
 import prettyHrtime from 'pretty-hrtime';
 import opener from 'opener';
 import rimraf from 'rimraf';
@@ -198,6 +201,98 @@ function packProject(options) {
   });
 }
 
+function projectLicenses(options) {
+  return new Promise((resolve, reject) => {
+    console.log(
+      `${delimiter}: Evaluating licenses...`
+    );
+    const packageJSON = path.resolve('package.json');
+    const packageJSONAsString = fs.readFileSync(packageJSON);
+    const json = JSON.parse(packageJSONAsString);
+    if (json.dependencies) {
+      json.bundledDependencies = Object.keys(json.dependencies);
+      fs.writeFileSync(packageJSON, JSON.stringify(json, null, 2));
+    }
+
+    try {
+      cp.exec('npm pack', (packErr, stdout, stderr) => {
+        console.log(stdout);
+        console.error(stderr);
+
+        if (packErr) {
+          throw packErr;
+        }
+        const licenseMap = {
+          name: json.name,
+          version: json.version,
+          dependencies: { licenseNotFound: [] }
+        };
+
+        const tarballName = `${json.name}-${json.version}.tgz`;
+        tarball.extractTarball(tarballName, './tmp', (err) => {
+          if (err) {
+            throw err;
+          }
+
+          fs.renameSync(
+            path.resolve(tarballName),
+            path.resolve(`${json.name}-${json.version}-src-with-dependecies.tgz`)
+          );
+
+          const dependencies = fs.readdirSync('./tmp/package/node_modules');
+
+          dependencies.forEach((dependency) => {
+            const dependencyPackageJSON = path.resolve(
+              `node_modules/${dependency}/package.json`
+            );
+            const contents = fs.readFileSync(dependencyPackageJSON);
+            const instance = JSON.parse(contents);
+            let license = instance.license;
+            if (!license && instance.licenses) {
+              license = instance.licenses[0];
+            }
+
+            if (!license) {
+              licenseMap.dependencies.licenseNotFound.push(dependency);
+            } else if (license.type) {
+              licenseMap.dependencies[dependency] = license.type;
+            } else {
+              licenseMap.dependencies[dependency] = license;
+            }
+          });
+
+          const dependencyLicense = path.resolve(
+            `${json.name}-${json.version}-licenses.json`
+          );
+
+          // write dependency license map
+          fs.writeFileSync(dependencyLicense, JSON.stringify(
+            licenseMap, null, 2)
+          );
+
+          // revert original package.json
+          fs.writeFileSync(packageJSON, JSON.stringify(
+            JSON.parse(packageJSONAsString), null, 2)
+          );
+
+          del.sync(['./tmp']);
+
+          resolve();
+        });
+      });
+    } catch (e) {
+      console.log(e);
+
+      // revert original package.json
+      fs.writeFileSync(packageJSON, JSON.stringify(
+        JSON.parse(packageJSONAsString), null, 2)
+      );
+
+      reject(e);
+    }
+  });
+}
+
 function errorHandler(err = {}) {
   console.log(
     `${delimiter}: ${chalk.red('failed')}`
@@ -217,11 +312,18 @@ export default function (vorpal) {
       'Builds a grommet application for development and/or production'
     )
     .option('--skip-open', 'Skip browser opening on first compilation')
+    .option('--licenses', 'Generate license information')
     .action((args, cb) => {
       const timeId = process.hrtime();
 
       deleteDistributionFolder()
         .then(() => packProject(args.options))
+        .then(() => {
+          if (args.options.licenses) {
+            return projectLicenses();
+          }
+          return Promise.resolve();
+        })
         .then(() => {
           console.log(
             `${delimiter}: ${chalk.green('success')}`
