@@ -276,6 +276,8 @@ function projectLicenses(options) {
           );
 
           del.sync(['./tmp']);
+
+          resolve();
         });
       });
     } catch (e) {
