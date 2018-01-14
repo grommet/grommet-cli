@@ -24,7 +24,8 @@ export const themes = {
   grommet: 'grommet/scss/vanilla/index',
   hpe: 'grommet/scss/hpe/index',
   aruba: 'grommet/scss/aruba/index',
-  hpinc: 'grommet/scss/hpinc/index'
+  hpinc: 'grommet/scss/hpinc/index',
+  dxc: 'grommet/scss/dxc/index'
 };
 
 export function capitalize(str) {
