@@ -62,12 +62,13 @@ export function fileExists(filePath) {
 export function generateProject(from, to, options, config) {
   return new Promise((resolve) => {
     const templateVars = {
-      appName: options.app,
-      appTitle: capitalize(options.app.replace(/-|_/g, ' ')),
+      appName: options.name,
+      appTitle: capitalize(options.name.replace(/-|_/g, ' ')),
       appDescription: options.description,
       appRepository: options.repository,
       appLicense: options.license,
-      appTheme: themes[options.theme]
+      appTheme: themes[options.theme],
+      appVersion: options.version
     };
 
     console.log(`[${config.delimiter}] Generating app at: ${to}`);
