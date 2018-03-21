@@ -1,0 +1,13 @@
+{
+  "presets": [ "env", "stage-1", "react"],
+  "plugins": [
+    "styled-components"
+  ],
+  "env": {
+    "development": {
+    },
+    "production": {
+      "plugins": ["grommet"]
+    }
+  }
+}

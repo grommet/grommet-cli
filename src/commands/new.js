@@ -27,30 +27,37 @@ export default function (vorpal) {
         'npm --version', { silent:true }
       ).stdout.toString().match(/^(\d+\.\d+)/)[1]
     ),
-    nodeVersion: Number(process.version.match(/^v(\d+\.\d+)/)[1])
+    nodeVersion: Number(process.version.match(/^v(\d+\.\d+)/)[1]),
+    versions: [1, 2]
   };
 
   vorpal
     .command(
-      'new [app]',
-      `Create a new grommet app.
-       Check type option for different ways to initialize an app.`
+      'new [name]',
+      `Create a new grommet application.
+       Check the type option for different ways to initialize.`
+    )
+    .option(
+      '-v, --version [version]',
+      `Grommet version to use (${config.versions.join()}). Defaults to 1.
+      (You can press tab for autocomplete)`,
+      config.versions
     )
     .option(
       '-t, --type [type]',
-      `Type of the generated app (${config.appTypes.join()}). Defaults to app.
+      `Type of the application (${config.appTypes.join()}). Defaults to app.
       (You can press tab for autocomplete)`,
       config.appTypes
     )
     .option(
       '--theme [theme]',
-      `Theme of the generated app (${config.appThemes.join()}). Defaults to grommet.
+      `Theme to use (${config.appThemes.join()}). Defaults to grommet.
       (You can press tab for autocomplete)`,
       config.appThemes
     )
     .option(
       '-d, --description [description]',
-      `Quick description of the app. Defaults to empty.`
+      `Quick description. Defaults to empty.`
     )
     .option(
       '-r, --repository [repository]',
@@ -66,12 +73,17 @@ export default function (vorpal) {
     )
     .validate((args) => {
       if (args.options.type && !config.appTypes.includes(args.options.type)) {
-        return `Invalid type. Available types are: ${config.appTypes.join()}`;
+        return `Invalid type: ${args.options.type}. Available types are: ${config.appTypes.join()}`;
       }
 
       if (args.options.theme && !config.appThemes.includes(args.options.theme)) {
-        return `Invalid theme. Available themes are: ${config.appThemes.join()}`;
+        return `Invalid theme: ${args.options.theme}. Available themes are: ${config.appThemes.join()}`;
       }
+
+      if (args.options.version && !config.versions.includes(args.options.version)) {
+        return `Invalid version: ${args.options.version}. Available versions are: ${config.versions.join()}`;
+      }
+
       return true;
     })
     .action((args, cb) => {
@@ -81,10 +93,11 @@ export default function (vorpal) {
       const options = Object.assign({
         type: 'app',
         theme: 'grommet',
-        app: args.app || 'app-name',
+        name: args.name || 'app-name',
         description: '',
         repository: '',
-        license: ''
+        license: '',
+        version: 1
       }, args.options);
 
       vorpal.activeCommand.prompt({
@@ -95,7 +108,7 @@ export default function (vorpal) {
       }, (result) => {
         options.basePath = path.resolve(result.basePath);
 
-        const newAppPath = path.join(options.basePath, options.app);
+        const newAppPath = path.join(options.basePath, options.name);
 
         if (fileExists(newAppPath)) {
           throw `[${config.delimiter}] Error while creating app. Directory "${newAppPath}" already exists.`;
@@ -104,7 +117,7 @@ export default function (vorpal) {
           if (err) {
             throw err;
           }
-          var templateFolder = path.join(config.cliPath, 'templates', options.type);
+          var templateFolder = path.join(config.cliPath, 'templates', `v${options.version}`, options.type);
 
           try {
             generateProject(
@@ -122,9 +135,9 @@ export default function (vorpal) {
                 return runModulesInstall(newAppPath, config);
               }
             })
-            .then(cb)
-            // if something fails during the installation of modules the cli should NOT fail.
-            .catch(() => process.exit(0));
+              .then(cb);
+              // if something fails during the installation of modules the cli should NOT fail.
+              // .catch(() => process.exit(0));
           } catch(err) {
             shelljs.rm('-rf', newAppPath);
             throw err;
