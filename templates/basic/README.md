@@ -13,17 +13,17 @@ To run this application, execute the following commands:
   2. Start the front-end dev server:
 
     ```
-    $ npm run dev
+    $ npm run start
     ```
 
   3. Create the app distribution to be used by a back-end server
 
     ```
-    $ NODE_ENV=production grommet pack
+    $ npm run build
     ```
 
   4. Test and run linters:
 
     ```
-    $ npm test
+    $ npm run check
     ```
