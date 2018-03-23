@@ -21,7 +21,6 @@ module.exports = {
     };
 
     console.log(`[grommet] Generating app at: ${to}`);
-    console.log('$$$ from', from);
     const walker = walk.walk(from, { followLinks: false });
 
     walker.on('file', (root, stat, next) => {

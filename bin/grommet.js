@@ -19,6 +19,8 @@ const fileExists = (filePath) => {
   /* eslint-enable no-empty */
 };
 
+const cliPath = path.join(__dirname, '..');
+
 grommet
   .version('6.0.0-beta.1')
   .command('new <app>')
@@ -34,7 +36,7 @@ grommet
       if (err) {
         throw err;
       }
-      const templateFolder = path.resolve(path.join('templates', 'basic'));
+      const templateFolder = path.resolve(path.join(cliPath, 'templates', 'basic'));
 
       try {
         generateProject(templateFolder, newAppPath, { app }).then(() => {
