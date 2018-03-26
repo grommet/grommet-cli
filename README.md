@@ -1,14 +1,10 @@
 # grommet-cli
 Command Line interface for grommet v2
 
-## Install
+## Run
 
 ```command
-npm install grommet-cli@next -g
-```
-
-```command
-grommet new my-app
+npx --package grommet-cli@next grommet new my-app
 ```
 
 ## Commands
