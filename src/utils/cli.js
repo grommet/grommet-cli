@@ -25,7 +25,7 @@ export const themes = {
   hpe: 'grommet/scss/hpe/index',
   aruba: 'grommet/scss/aruba/index',
   hpinc: 'grommet/scss/hpinc/index',
-  hpinc: 'grommet/scss/dxc/index'
+  dxc: 'grommet/scss/dxc/index'
 
 };
 
