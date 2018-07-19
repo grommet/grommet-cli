@@ -1,6 +1,6 @@
 {
   "name": "grommet-cli",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "main": "bin/grommet.js",
   "description": "Command line interface for Grommet.",
   "authors": [
