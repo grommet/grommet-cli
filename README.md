@@ -1,6 +1,8 @@
 # grommet-cli
 Command Line interface for grommet
 
+:warning: This project has been deprecated in favor of create-react-app. This project will only support Grommet v1. For Grommet v2 use [this](https://facebook.github.io/create-react-app/).
+
 ![](http://i.imgur.com/LER7lCH.gif)
 
 ## Install
