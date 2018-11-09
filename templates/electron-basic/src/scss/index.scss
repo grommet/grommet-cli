@@ -1,0 +1,6 @@
+// uncomment one of the lines below to use locally-installed fonts (must go in dist/font):
+// $hpe-fonts-path: 'font/';
+// $hpinc-fonts-path: 'font/';
+// $fonts-path: 'font/';
+
+@import '~<%= appTheme %>';

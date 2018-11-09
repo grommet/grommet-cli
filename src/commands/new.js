@@ -18,7 +18,7 @@ import {
 
 export default function (vorpal) {
   const config = {
-    appTypes: ['app', 'basic', 'docs'],
+    appTypes: ['app', 'basic', 'docs', 'electron-basic', 'electron-app'],
     appThemes: Object.keys(themes),
     cliPath: path.join(__dirname, '../../'),
     delimiter: vorpal.chalk.magenta('grommet'),
