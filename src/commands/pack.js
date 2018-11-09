@@ -234,10 +234,12 @@ function projectLicenses(options) {
             throw err;
           }
 
+          const newTarballName = `${json.name}-${json.version}-src-with-dependencies.tgz`;
           fs.renameSync(
             path.resolve(tarballName),
-            path.resolve(`${json.name}-${json.version}-src-with-dependecies.tgz`)
+            path.resolve(newTarballName)
           );
+          console.log("Changed archive name to", newTarballName);
 
           const dependencies = fs.readdirSync('./tmp/package/node_modules');
 
